@@ -13,21 +13,25 @@ namespace Multithreading_04
 {
     public partial class MainForm : Form
     {
-        private BoundedBuffer myBuffer;
-        private Reader myReader;
-        private Writer myWriter;
-        private Modifier myModifier;
+        private BoundedBuffer myBuffer; //Store each string in here
+        private Writer myWriter;        //Writer puts string in buffer
+        private Modifier myModifier;    //Modifier modifies string in buffer
+        private Reader myReader;        //Reader stores string in buffer to output list
 
-        private int myBufferSize;
+        private int myBufferSize;       //Size of how many strings can be handled before writer has to wait
+
+        public static MainForm Form;
 
         public MainForm()
         {
             InitializeComponent();
 
+            Form = this;
+
             myBufferSize = 15;
         }
 
-        private void FileSelect_Click(object sender, EventArgs e)
+        private void OpenFile_Click(object sender, EventArgs e)
         {
             using (OpenFileDialog openTextFile = new OpenFileDialog())
             {
@@ -39,22 +43,45 @@ namespace Multithreading_04
                     if (openTextFile.CheckFileExists)
                     {
                         SourceTextBox.Text = File.ReadAllText(openTextFile.FileName);
-                        myBuffer = (SourceTextBox.Text.Length > myBufferSize) ?
-                            new BoundedBuffer(myBufferSize) : 
-                            new BoundedBuffer(SourceTextBox.Text.Length - 1);
                     }
                 }
             }
         }
 
-        private void CopyToDestButton_Click(object sender, EventArgs e)
+        private void SaveFile_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void FileExit_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void CopyToDestButton_Click(object sender, EventArgs e)
+        {
+            List<string> sourceText = SourceTextBox.Text.Split(' ').ToList();
+
+            myBuffer = (sourceText.Count > myBufferSize) ?
+                new BoundedBuffer(myBufferSize, SourceTextBox, NotifyUserCheck.Checked, FindTextBox.Text, ReplaceTextBox.Text) :
+                new BoundedBuffer((sourceText.Count - 1), SourceTextBox, NotifyUserCheck.Checked, FindTextBox.Text, ReplaceTextBox.Text);
+
+            myWriter = new Writer(myBuffer, sourceText);
+            myModifier = new Modifier(myBuffer, sourceText.Count);
+            myReader = new Reader(myBuffer, sourceText.Count);
         }
 
         private void ClearDestButton_Click(object sender, EventArgs e)
         {
 
+        }
+
+        public void SetDestinationText()
+        {
+            DestinationTextBox.InvokeIfRequired(() =>
+            {
+                DestinationTextBox.Text = string.Join(" ", myReader.GetText);
+            });
         }
     }
 }

@@ -45,6 +45,10 @@
             this.FileSelect = new System.Windows.Forms.ToolStripMenuItem();
             this.SourceTextBox = new System.Windows.Forms.RichTextBox();
             this.DestinationTextBox = new System.Windows.Forms.RichTextBox();
+            this.OpenFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.SaveFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.FileExit = new System.Windows.Forms.ToolStripMenuItem();
             this.TextControl.SuspendLayout();
             this.SourcePage.SuspendLayout();
             this.DestinationPage.SuspendLayout();
@@ -198,10 +202,14 @@
             // 
             // FileSelect
             // 
+            this.FileSelect.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.OpenFile,
+            this.SaveFile,
+            this.toolStripSeparator1,
+            this.FileExit});
             this.FileSelect.Name = "FileSelect";
             this.FileSelect.Size = new System.Drawing.Size(37, 20);
             this.FileSelect.Text = "File";
-            this.FileSelect.Click += new System.EventHandler(this.FileSelect_Click);
             // 
             // SourceTextBox
             // 
@@ -221,6 +229,32 @@
             this.DestinationTextBox.Size = new System.Drawing.Size(593, 357);
             this.DestinationTextBox.TabIndex = 1;
             this.DestinationTextBox.Text = "";
+            // 
+            // OpenFile
+            // 
+            this.OpenFile.Name = "OpenFile";
+            this.OpenFile.Size = new System.Drawing.Size(198, 22);
+            this.OpenFile.Text = "Open Source File";
+            this.OpenFile.Click += new System.EventHandler(this.OpenFile_Click);
+            // 
+            // SaveFile
+            // 
+            this.SaveFile.Name = "SaveFile";
+            this.SaveFile.Size = new System.Drawing.Size(198, 22);
+            this.SaveFile.Text = "Save Destination File As";
+            this.SaveFile.Click += new System.EventHandler(this.SaveFile_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(195, 6);
+            // 
+            // FileExit
+            // 
+            this.FileExit.Name = "FileExit";
+            this.FileExit.Size = new System.Drawing.Size(198, 22);
+            this.FileExit.Text = "Exit";
+            this.FileExit.Click += new System.EventHandler(this.FileExit_Click);
             // 
             // MainForm
             // 
@@ -267,6 +301,10 @@
         private System.Windows.Forms.ToolStripMenuItem FileSelect;
         private System.Windows.Forms.RichTextBox SourceTextBox;
         private System.Windows.Forms.RichTextBox DestinationTextBox;
+        private System.Windows.Forms.ToolStripMenuItem OpenFile;
+        private System.Windows.Forms.ToolStripMenuItem SaveFile;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem FileExit;
     }
 }
 
