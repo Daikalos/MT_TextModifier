@@ -31,7 +31,7 @@ namespace Multithreading_04
             for (int i = 0; i < myNbrOfStrings;)
             {
                 string wordRead = mySharedBuffer.Read();
-                if (!string.IsNullOrEmpty(wordRead))
+                if (wordRead != null)
                 {
                     myReadList.Add(wordRead);
                     i++;
