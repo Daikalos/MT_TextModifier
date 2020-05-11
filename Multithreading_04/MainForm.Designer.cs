@@ -34,7 +34,8 @@
             this.DestinationPage = new System.Windows.Forms.TabPage();
             this.DestinationTextBox = new System.Windows.Forms.RichTextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.NbrOfReplacementsLabel = new System.Windows.Forms.Label();
+            this.NextMatchButton = new System.Windows.Forms.Button();
+            this.ReplacementCountLabel = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -49,7 +50,6 @@
             this.SaveFile = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.FileExit = new System.Windows.Forms.ToolStripMenuItem();
-            this.NextMatchButton = new System.Windows.Forms.Button();
             this.TextControl.SuspendLayout();
             this.SourcePage.SuspendLayout();
             this.DestinationPage.SuspendLayout();
@@ -112,7 +112,7 @@
             // 
             this.groupBox1.BackColor = System.Drawing.SystemColors.ScrollBar;
             this.groupBox1.Controls.Add(this.NextMatchButton);
-            this.groupBox1.Controls.Add(this.NbrOfReplacementsLabel);
+            this.groupBox1.Controls.Add(this.ReplacementCountLabel);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label1);
@@ -126,15 +126,27 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Find and Replace";
             // 
-            // NbrOfReplacementsLabel
+            // NextMatchButton
             // 
-            this.NbrOfReplacementsLabel.AutoSize = true;
-            this.NbrOfReplacementsLabel.Location = new System.Drawing.Point(219, 117);
-            this.NbrOfReplacementsLabel.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
-            this.NbrOfReplacementsLabel.Name = "NbrOfReplacementsLabel";
-            this.NbrOfReplacementsLabel.Size = new System.Drawing.Size(13, 13);
-            this.NbrOfReplacementsLabel.TabIndex = 6;
-            this.NbrOfReplacementsLabel.Text = "0";
+            this.NextMatchButton.Enabled = false;
+            this.NextMatchButton.Location = new System.Drawing.Point(298, 93);
+            this.NextMatchButton.Margin = new System.Windows.Forms.Padding(3, 3, 6, 6);
+            this.NextMatchButton.Name = "NextMatchButton";
+            this.NextMatchButton.Size = new System.Drawing.Size(108, 36);
+            this.NextMatchButton.TabIndex = 7;
+            this.NextMatchButton.Text = "Go to next match";
+            this.NextMatchButton.UseVisualStyleBackColor = true;
+            this.NextMatchButton.Click += new System.EventHandler(this.NextMatchButton_Click);
+            // 
+            // ReplacementCountLabel
+            // 
+            this.ReplacementCountLabel.AutoSize = true;
+            this.ReplacementCountLabel.Location = new System.Drawing.Point(219, 117);
+            this.ReplacementCountLabel.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
+            this.ReplacementCountLabel.Name = "ReplacementCountLabel";
+            this.ReplacementCountLabel.Size = new System.Drawing.Size(13, 13);
+            this.ReplacementCountLabel.TabIndex = 6;
+            this.ReplacementCountLabel.Text = "0";
             // 
             // label3
             // 
@@ -260,18 +272,6 @@
             this.FileExit.Text = "Exit";
             this.FileExit.Click += new System.EventHandler(this.FileExit_Click);
             // 
-            // NextMatchButton
-            // 
-            this.NextMatchButton.Enabled = false;
-            this.NextMatchButton.Location = new System.Drawing.Point(298, 93);
-            this.NextMatchButton.Margin = new System.Windows.Forms.Padding(3, 3, 6, 6);
-            this.NextMatchButton.Name = "NextMatchButton";
-            this.NextMatchButton.Size = new System.Drawing.Size(108, 36);
-            this.NextMatchButton.TabIndex = 7;
-            this.NextMatchButton.Text = "Go to next match";
-            this.NextMatchButton.UseVisualStyleBackColor = true;
-            this.NextMatchButton.Click += new System.EventHandler(this.NextMatchButton_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -305,7 +305,7 @@
         private System.Windows.Forms.TabPage SourcePage;
         private System.Windows.Forms.TabPage DestinationPage;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Label NbrOfReplacementsLabel;
+        private System.Windows.Forms.Label ReplacementCountLabel;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;

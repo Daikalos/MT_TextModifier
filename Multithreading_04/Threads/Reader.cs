@@ -10,9 +10,9 @@ namespace Multithreading_04
     class Reader : ThreadObject
     {
         private BoundedBuffer mySharedBuffer;
-        private int myNbrOfStrings;
+        private int myNbrOfStrings; //How many words to go through in source
 
-        private List<string> myReadList;
+        private readonly List<string> myReadList; //Output list used to generate destination text
 
         public List<string> GetText => myReadList;
 
@@ -33,6 +33,7 @@ namespace Multithreading_04
                 string wordRead = mySharedBuffer.Read();
                 if (wordRead != null)
                 {
+                    //After having successfully read word in string buffer, add string to readlist
                     myReadList.Add(wordRead);
                     i++;
                 }

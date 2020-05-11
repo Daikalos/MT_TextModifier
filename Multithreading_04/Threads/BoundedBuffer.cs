@@ -18,15 +18,15 @@ namespace Multithreading_04
             New
         }
 
-        private string[] myStringBuffer;
-        private Status[] myStatusBuffer;
-
+        private readonly string[] myStringBuffer;
+        private readonly Status[] myStatusBuffer; //Empty -> New -> Checked -> Empty
+                                                  //Writer -> Modifier -> Reader -> Writer
         private RichTextBox mySourceTextBox;
 
         private bool myNotifyUser;         //Notify user on each replacement
 
         private int myBufferSize;
-        private int myNbrOfReplacements;
+        private int myReplacementCount;
         private int myStartPosition;       //Start position in textbox to use for selecting/marking
 
         private int myWritePos;            //Writer Pointer
@@ -36,13 +36,12 @@ namespace Multithreading_04
         private string myFindString;       //The inputted string for modifier to find and replace
         private string myReplaceString;    //The inputted string to replace the found string
 
-        //Lock access to string buffer to only allow only one thread at a time to access it
-        private readonly object myLockStringBuffer = new object();
+        //Lock access to shared resources and allow only one thread to be working with buffer at a time
+        private readonly object mySyncLock = new object();
         //Lock used for notifying user when string is set to be modified
         private readonly object myLockNotify = new object();
 
         public bool NotifyUser => myNotifyUser;
-
         public string ReplaceString => myReplaceString;
 
         public BoundedBuffer(int bufferSize, RichTextBox richTextBox, bool notifyUser, string findString, string replaceString)
@@ -53,8 +52,8 @@ namespace Multithreading_04
             this.myFindString = findString;
             this.myReplaceString = replaceString;
 
-            myNbrOfReplacements = 0;
-            myStartPosition = -(myFindString.Length + 1);
+            myReplacementCount = 0;
+            myStartPosition = -(myFindString.Length);
 
             myWritePos = 0;
             myFindPos = 0;
@@ -75,77 +74,94 @@ namespace Multithreading_04
             }
         }
 
+        /// <summary>
+        /// Put stringToWrite in buffer if position is empty
+        /// </summary>
         public bool Write(string stringToWrite)
         {
-            if (myStatusBuffer[myWritePos] == Status.Empty)
+            lock (mySyncLock)
             {
-                lock (myLockStringBuffer)
+                if (myStatusBuffer[myWritePos] == Status.Empty)
                 {
                     myStringBuffer[myWritePos] = stringToWrite;
+
+                    myStatusBuffer[myWritePos] = Status.New;
+                    myWritePos = (myWritePos + 1) % myBufferSize;
+
+                    return true;
                 }
-
-                myStatusBuffer[myWritePos] = Status.New;
-                myWritePos = (myWritePos + 1) % myBufferSize;
-
-                return true;
             }
             return false;
         }
 
+        /// <summary>
+        /// Modifies string in buffer if position is new
+        /// </summary>
         public bool Modify()
         {
-            if (myStatusBuffer[myFindPos] == Status.New)
+            lock (mySyncLock)
             {
-                myStartPosition += myStringBuffer[myFindPos].Length + 1;
-
-                if (myStringBuffer[myFindPos] == myFindString)
+                if (myStatusBuffer[myFindPos] == Status.New)
                 {
-                    lock (myLockStringBuffer)
+                    myStartPosition += myStringBuffer[myFindPos].Length;
+
+                    if (myStringBuffer[myFindPos] == myFindString)
                     {
                         myStringBuffer[myFindPos] = myReplaceString;
+
+                        HasBeenModified();
                     }
 
-                    //Select and mark in source richtextbox where word has been modififed
-                    Select();
-                    Mark();
+                    myStatusBuffer[myFindPos] = Status.Checked;
+                    myFindPos = (myFindPos + 1) % myBufferSize;
 
-                    //For each modification, increase and show in form how many replacements have been performed
-                    myNbrOfReplacements++;
-                    MainForm.Form.SetNbrOfReplacements(myNbrOfReplacements);
-
-                    if (myNotifyUser)
-                    {
-                        lock (myLockNotify)
-                        {
-                            //If notify user has been selected, block thread until notified from user
-                            Monitor.Wait(myLockNotify);
-                        }
-                    }
+                    return true;
                 }
-
-                myStatusBuffer[myFindPos] = Status.Checked;
-                myFindPos = (myFindPos + 1) % myBufferSize;
-                
-                return true;
             }
             return false;
         }
 
+        /// <summary>
+        /// Read string from buffer and return it
+        /// </summary>
         public string Read()
         {
-            string readString = null;
-
-            if (myStatusBuffer[myReadPos] == Status.Checked)
+            lock (mySyncLock)
             {
-                lock (myLockStringBuffer)
+                if (myStatusBuffer[myReadPos] == Status.Checked)
                 {
-                    readString = myStringBuffer[myReadPos];
-                }
+                    string readString = myStringBuffer[myReadPos];
 
-                myStatusBuffer[myReadPos] = Status.Empty;
-                myReadPos = (myReadPos + 1) % myBufferSize;
+                    myStatusBuffer[myReadPos] = Status.Empty;
+                    myReadPos = (myReadPos + 1) % myBufferSize;
+
+                    return readString;
+                }
             }
-            return readString;
+            return null;
+        }
+
+        /// <summary>
+        /// If string buffer was successfully modified, select, mark and if needed notify user
+        /// </summary>
+        private void HasBeenModified()
+        {
+            //Select and mark in source richtextbox which word has been modififed
+            Select();
+            Mark();
+
+            //For each modification, increase and show in form how many replacements have been performed
+            myReplacementCount++;
+            MainForm.Form.SetReplacementCount(myReplacementCount);
+
+            //If notify user has been selected, block thread until notified from user
+            if (myNotifyUser)
+            {
+                lock (myLockNotify)
+                {
+                    Monitor.Wait(myLockNotify);
+                }
+            }
         }
 
         private void Select()
@@ -170,7 +186,7 @@ namespace Multithreading_04
         {
             lock (myLockNotify)
             {
-                //Notify modify which is waiting, that it can proceed
+                //Notify modifier which is waiting, that it can proceed
                 Monitor.Pulse(myLockNotify);
             }
         }

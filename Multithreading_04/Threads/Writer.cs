@@ -25,6 +25,8 @@ namespace Multithreading_04
         {
             for (int i = 0; i < myTextToWrite.Count;)
             {
+                //Go through each word in source and go to next word if having succesfully
+                //assigned current word into string buffer in bounded buffer
                 if (mySharedBuffer.Write(myTextToWrite[i]))
                 {
                     i++;
