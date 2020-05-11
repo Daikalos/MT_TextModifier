@@ -71,8 +71,8 @@ namespace Multithreading_04
 
         private void CopyToDestButton_Click(object sender, EventArgs e)
         {
-            //Use regex pattern to split text
-            List<string> splitSourceText = Regex.Split(SourceTextBox.Text, @"([ .,;_^\n\r\t-])").ToList();
+            //Split by any character that does not match a word character
+            List<string> splitSourceText = Regex.Split(SourceTextBox.Text, @"([^\w])").ToList();
 
             //Create new buffer and make sure buffer size is not larger than amount of words in text
             myBuffer = (splitSourceText.Count > myBufferSize) ?

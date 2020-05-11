@@ -142,7 +142,7 @@ namespace Multithreading_04
         }
 
         /// <summary>
-        /// If string buffer was successfully modified, select, mark and if needed notify user
+        /// If string buffer was successfully modified, select, mark and if checked, notify user
         /// </summary>
         private void HasBeenModified()
         {
@@ -150,7 +150,7 @@ namespace Multithreading_04
             Select();
             Mark();
 
-            //For each modification, increase and show in form how many replacements have been performed
+            //For each modification, increase count and show in form how many replacements have been performed
             myReplacementCount++;
             MainForm.Form.SetReplacementCount(myReplacementCount);
 
