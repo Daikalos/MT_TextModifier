@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -19,8 +15,8 @@ namespace Multithreading_04
         private Modifier myModifier;    //Modifier modifies string in buffer
         private Reader myReader;        //Reader stores string in buffer to output list
 
-        private int myBufferSize;       //Size of how many strings can be handled before writer has to wait
-        private string mySavedSourceText;    //The loaded text from txt file
+        private int myBufferSize;         //Size of how many strings can be handled before writer has to wait
+        private string mySavedSourceText; //The loaded text from txt file
 
         public static MainForm Form;
 
@@ -93,7 +89,7 @@ namespace Multithreading_04
         {
             DestinationTextBox.Clear();
 
-            //Clear sourcetextbox to remove marks and assign loaded text again
+            //Clear sourcetextbox to remove marks and assign saved text again
             SourceTextBox.Clear();
             SourceTextBox.Text = mySavedSourceText;
 

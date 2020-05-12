@@ -1,28 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace Multithreading_04
+﻿namespace Multithreading_04
 {
     class Modifier : ThreadObject
     {
         private BoundedBuffer mySharedBuffer;
-        private int myNbrOfStrings; //How many words to go through in source
+        private int myStringsCount; //How many words to go through in source
 
-        public Modifier(BoundedBuffer sharedBuffer, int nbrOfStrings)
+        public Modifier(BoundedBuffer sharedBuffer, int stringsCount)
         {
             this.mySharedBuffer = sharedBuffer;
-            this.myNbrOfStrings = nbrOfStrings;
+            this.myStringsCount = stringsCount;
 
             StartThread();
         }
 
         public override void Update()
         {
-            for (int i = 0; i < myNbrOfStrings;)
+            for (int i = 0; i < myStringsCount;)
             {
                 if (mySharedBuffer.Modify())
                 {

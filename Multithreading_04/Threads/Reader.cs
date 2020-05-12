@@ -1,25 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Multithreading_04
 {
     class Reader : ThreadObject
     {
         private BoundedBuffer mySharedBuffer;
-        private int myNbrOfStrings; //How many words to go through in source
+        private int myStringsCount; //How many words to go through in source
 
         private readonly List<string> myReadList; //Output list used to generate destination text
 
         public List<string> GetText => myReadList;
 
-        public Reader(BoundedBuffer sharedBuffer, int nbrOfStrings)
+        public Reader(BoundedBuffer sharedBuffer, int stringsCount)
         {
             this.mySharedBuffer = sharedBuffer;
-            this.myNbrOfStrings = nbrOfStrings;
+            this.myStringsCount = stringsCount;
 
             myReadList = new List<string>();
 
@@ -28,7 +23,7 @@ namespace Multithreading_04
 
         public override void Update()
         {
-            for (int i = 0; i < myNbrOfStrings;)
+            for (int i = 0; i < myStringsCount;)
             {
                 string wordRead = mySharedBuffer.Read();
                 if (wordRead != null)
